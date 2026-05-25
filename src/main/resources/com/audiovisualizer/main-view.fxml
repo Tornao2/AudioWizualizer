@@ -9,20 +9,18 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.audiovisualizer.controller.MainController"
-            prefHeight="768.0" prefWidth="1024.0">
-    <Region fx:id="backgroundLayer"
-            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            prefHeight="768.0" prefWidth="1024.0"
+            onDragOver="#handleDragOver" onDragDropped="#handleDragAndDrop">
     <BorderPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <top>
-            <VBox>
-                <HBox fx:id="topBar" alignment="CENTER_LEFT" prefHeight="60.0" minHeight="60.0" maxHeight="60.0">
+            <VBox fx:id ="topBar" >
+                <HBox alignment="CENTER_LEFT" prefHeight="60.0" minHeight="60.0" maxHeight="60.0">
                     <padding><Insets left="20.0" right="20.0" /></padding>
                     <Label text="Audio Visualizer" style="-fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" />
                     <Region HBox.hgrow="ALWAYS" />
                     <Button fx:id="menuToggleButton" onAction="#handleOpenMenu" style="-fx-background-color: transparent; -fx-cursor: hand;">
-                        <graphic><SVGPath  fx:id="menuToggleGraphic" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" strokeLineCap="ROUND" scaleX="1.3" scaleY="1.3" /></graphic>
+                        <graphic><SVGPath fx:id="menuToggleGraphic" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" strokeLineCap="ROUND" scaleX="1.3" scaleY="1.3" /></graphic>
                     </Button>
                 </HBox>
                 <Separator style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;" />
@@ -30,17 +28,23 @@
         </top>
         <center>
             <AnchorPane fx:id="visualizerContainer" minWidth="0" minHeight="0">
+                <Region fx:id="backgroundLayer"
+                        AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                 <Canvas fx:id="visualizerCanvas" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
             </AnchorPane>
         </center>
         <bottom>
-            <VBox>
+            <VBox fx:id="mainControlPanel">
                 <Separator style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;" />
-                <VBox fx:id="bottomBar" spacing="10.0">
+                <VBox spacing="10.0">
                     <padding><Insets bottom="15.0" left="20.0" right="20.0" top="15.0" /></padding>
                     <VBox spacing="6.0">
-                        <Label fx:id="songTitleLabel" text="Brak utworu" style="-fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                        <Label fx:id="durationLabel" text="00:00 / 00:00" style="-fx-text-fill: #888888; -fx-font-size: 13px;" />
+                        <Label fx:id="currentTrackLabel" text="Brak utworu" style="-fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label fx:id="timeLabel" text="00:00 / 00:00" style="-fx-text-fill: #888888; -fx-font-size: 13px;" />
+                        <Label fx:id="timePreviewLabel" visible="false" managed="false"
+                        text="00:00"
+                        style="-fx-text-fill: #4DA6FF; -fx-font-size: 12px; -fx-font-weight: bold;" />
                         <Slider fx:id="timeSlider" maxWidth="Infinity" />
                     </VBox>
                     <HBox alignment="CENTER_LEFT">
@@ -49,7 +53,7 @@
                                 <graphic><SVGPath fx:id="skipPrevGraphic" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" strokeLineCap="ROUND" strokeLineJoin="ROUND" scaleX="1.2" scaleY="1.2" /></graphic>
                             </Button>
                             <StackPane minWidth="40" minHeight="40">
-                                <Circle fx:id="playPauseBackground" radius="18.0" fill="#192C57" stroke="#192C57" strokeWidth="2.0" mouseTransparent="true" />
+                                <Circle radius="18.0" fill="#192C57" stroke="#192C57" strokeWidth="2.0" mouseTransparent="true" />
                                 <Button fx:id="playPauseButton" onAction="#handlePlayPause" minWidth="40" maxWidth="40" style="-fx-background-color: transparent; -fx-cursor: hand;">
                                     <graphic><SVGPath fx:id="playPauseGraphic" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" strokeLineCap="ROUND" strokeLineJoin="ROUND" scaleX="1.2" scaleY="1.2" /></graphic>
                                 </Button>
@@ -79,36 +83,183 @@
                 AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
                 AnchorPane.rightAnchor="0.0"
                 prefWidth="300.0" minWidth="300.0" maxWidth="300.0">
-        <VBox fx:id="playlistMenuPane" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" style="-fx-background-color: #1A1A1A;">
-            <HBox alignment="CENTER_LEFT" prefHeight="60.0" minHeight="60.0">
-                <padding><Insets left="20.0" right="20.0" /></padding>
-                <Label text="Playlista" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
-                <Region HBox.hgrow="ALWAYS" />
-                <Button onAction="#handleOpenSettings" style="-fx-background-color: transparent; -fx-cursor: hand;">
-                    <graphic><SVGPath content="M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" /></graphic>
-                </Button>
-                <Button onAction="#handleOpenMenu" style="-fx-background-color: transparent; -fx-cursor: hand;">
-                    <graphic><SVGPath fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" /></graphic>
-                </Button>
-            </HBox>
-            <ListView fx:id="playlistView" VBox.vgrow="ALWAYS" />
-            <Button text="+ Importuj" maxWidth="Infinity" />
-        </VBox>
-        <VBox fx:id="settingsMenuPane" visible="false" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" style="-fx-background-color: #1A1A1A;">
-            <HBox alignment="CENTER_LEFT" prefHeight="60.0" minHeight="60.0">
-                <padding><Insets left="20.0" right="20.0" /></padding>
-                <Button text="← Wróć" onAction="#handleOpenMenu" />
-                <Region HBox.hgrow="ALWAYS" />
-                <Label text="Ustawienia" style="-fx-text-fill: white;" />
-            </HBox>
-            <VBox spacing="15.0">
-                <padding><Insets bottom="20.0" left="20.0" right="20.0" top="15.0" /></padding>
-                <Slider fx:id="barsCountSlider" min="16" max="128" value="64" />
-                <Slider fx:id="sensitivitySlider" min="0.5" max="2.0" value="1.0" />
-                <Slider fx:id="gapSlider" max="10" value="2" />
-                <ToggleButton fx:id="mirrorToggle" text="Tryb Lustrzany" />
-                <ToggleButton fx:id="verticalToggle" text="Kierunek Wertykalny" />
+        <Separator orientation="VERTICAL"
+                   style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;"
+                   AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+        <VBox fx:id="playlistMenuPane" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0">
+            <VBox style="-fx-background-color: transparent;">
+                <HBox alignment="CENTER_LEFT" prefHeight="60.0" minHeight="60.0">
+                    <padding><Insets left="20.0" right="10.0" /></padding>
+                    <Label text="Playlista" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox alignment="CENTER" spacing="2.0">
+                        <Button fx:id="settingsToggleButton" onAction="#handleOpenSettings" style="-fx-background-color: transparent; -fx-cursor: hand;">
+                            <tooltip><Tooltip text="Ustawienia"/></tooltip>
+                            <graphic><SVGPath fx:id="playlistSettings" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" scaleX="0.9" scaleY="0.9" /></graphic>
+                        </Button>
+                        <Button fx:id="menuToggleButton2" onAction="#handleOpenMenu" style="-fx-background-color: transparent; -fx-cursor: hand;">
+                            <tooltip><Tooltip text="Zamknij"/></tooltip>
+                            <graphic><SVGPath fx:id="menuToggleGraphic2" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" strokeLineCap="ROUND" scaleX="1.2" scaleY="1.2" /></graphic>
+                        </Button>
+                    </HBox>
+                </HBox>
+                <Separator style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;" />
             </VBox>
+            <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" hbarPolicy="NEVER"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox fx:id="playlistContainer" style="-fx-background-color: transparent;">
+                </VBox>
+            </ScrollPane>
+            <VBox style="-fx-background-color: transparent;" minHeight="122.0" prefHeight="148.0" maxHeight="148.0" >
+                <Separator style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;" />
+                <VBox spacing="12.0" alignment="CENTER">
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="15.0" /></padding>
+                    <HBox alignment="CENTER">
+                        <Label fx:id="playlistCounterLabel" text="0 / 0" style="-fx-text-fill: #FFFFFF; -fx-font-size: 15px; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Button onAction="#handleAddTracks" text="+  Dodaj utwory" maxWidth="Infinity" prefHeight="40.0"
+                            style="-fx-background-color: #192C57; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
+                    <Label text="lub przeciągnij pliki na ekran" style="-fx-text-fill: #888888; -fx-font-size: 13px; -fx-font-style: italic; -fx-font-weight: bold;" />
+                </VBox>
+            </VBox>
+        </VBox>
+        <VBox fx:id="settingsMenuPane"  visible="false" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0">
+            <VBox style="-fx-background-color: transparent;">
+                <HBox alignment="CENTER_LEFT" prefHeight="60.0" minHeight="60.0">
+                    <padding><Insets left="20.0" right="10.0" /></padding>
+                    <Label text="Ustawienia" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox alignment="CENTER" spacing="2.0">
+                        <Button fx:id="settingsCloseButton" onAction="#handleCloseSettings" style="-fx-background-color: transparent; -fx-cursor: hand;">
+                            <tooltip><Tooltip text="Zamknij"/></tooltip>
+                            <graphic>
+                                <SVGPath fx:id="settingsCloseGraphic" fill="transparent" stroke="#FFFFFF" strokeWidth="2.0" strokeLineCap="ROUND" scaleX="1.2" scaleY="1.2" />
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </HBox>
+                <Separator style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;" />
+            </VBox>
+            <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                <VBox spacing="8.0">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="10.0"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="Liczba słupków: " style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label fx:id="barsCountValueLabel" text="64" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Slider fx:id="barsCountSliderNew" min="16" max="128" value="64" blockIncrement="1" snapToTicks="true">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                    </Slider>
+                    <HBox alignment="CENTER">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="16" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="128" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                    </HBox>
+                </VBox>
+                <VBox spacing="8.0">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="10.0"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="Czułość: " style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label fx:id="sensitivityValueLabel" text="1.0" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Slider fx:id="sensitivitySliderNew" min="0.5" max="2.0" value="1.0" blockIncrement="0.1">
+                    <padding><Insets left="5.0" right="5.0" /></padding>
+                    </Slider>
+                    <HBox alignment="CENTER">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="0.5" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="2.0" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                    </HBox>
+                </VBox>
+                <VBox spacing="8.0">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="10.0"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="Odstęp słupków: " style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label fx:id="gapValueLabel" text="2" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Slider fx:id="gapSliderNew" max="10" value="2" blockIncrement="1" majorTickUnit="1" minorTickCount="0"
+                            snapToTicks="true">
+                    <padding><Insets left="5.0" right="5.0" /></padding>
+                    </Slider>
+                    <HBox alignment="CENTER">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="0" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="10" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                    </HBox>
+                </VBox>
+                <VBox spacing="8.0">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="10.0"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="Tryb lustrzany" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ToggleButton fx:id="mirrorToggleNew" styleClass="modern-toggle">
+                            <graphic>
+                                <Region styleClass="thumb" />
+                            </graphic>
+                        </ToggleButton>
+                    </HBox>
+                </VBox>
+                <VBox spacing="8.0">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="10.0"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="Liczba kolorów: " style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label fx:id="colorsCountValueLabel" text="5" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                    </HBox>
+                    <Slider fx:id="colorsCountSlider" min="1" max="5" value="5"
+                            blockIncrement="1" majorTickUnit="1" minorTickCount="0"
+                            snapToTicks="true" />
+                    <HBox alignment="CENTER">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="1" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="5" style="-fx-text-fill: #888888; -fx-font-size: 11px;" />
+                    </HBox>
+                </VBox>
+                <Label text="Kolory gradientu" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="5.0"/></padding>
+                </Label>
+                <VBox fx:id="colorRowsContainer" spacing="6.0" style="-fx-background-color: transparent;">
+                    <padding><Insets left="10.0" right="10.0" bottom="10.0"/></padding>
+                </VBox>
+                <Separator style="-fx-background-color: #2A2A2A; -fx-opacity: 0.5;" />
+                <Label text="Kolory tła" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;">
+                    <padding><Insets top="10.0" left="10.0" right="10.0" bottom="5.0"/></padding>
+                </Label>
+                <VBox fx:id="bgColorRowsContainer" spacing="6.0" style="-fx-background-color: transparent;">
+                    <padding><Insets left="10.0" right="10.0" bottom="10.0"/></padding>
+                </VBox>
+                <Label text="Presety gradientu" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;">
+                    <padding><Insets top="5.0" left="10.0" right="10.0" bottom="5.0"/></padding>
+                </Label>
+                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                    <padding><Insets left="10.0" right="10.0" bottom="10.0"/>
+                    </padding>
+                    <ToggleButton fx:id="presetBtn0" styleClass="preset-btn" prefWidth="50" prefHeight="32" />
+                    <ToggleButton fx:id="presetBtn1" styleClass="preset-btn" prefWidth="50" prefHeight="32" />
+                    <ToggleButton fx:id="presetBtn2" styleClass="preset-btn" prefWidth="50" prefHeight="32" />
+                </HBox>
+                <VBox spacing="8.0">
+                    <padding><Insets left="10.0" right="10.0" bottom="10.0"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <padding><Insets left="5.0" right="5.0" /></padding>
+                        <Label text="Kierunek wertykalny" style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ToggleButton fx:id="gradientDirectionToggle" styleClass="modern-toggle">
+                            <graphic><Region styleClass="thumb" /></graphic>
+                        </ToggleButton>
+                    </HBox>
+                </VBox>
+            </VBox>
+            </ScrollPane>
         </VBox>
     </AnchorPane>
 </AnchorPane>

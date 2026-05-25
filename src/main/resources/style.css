@@ -1,0 +1,102 @@
+.modern-toggle {
+    -fx-background-color: #444444;
+    -fx-background-radius: 10px;
+    -fx-min-width: 40px;
+    -fx-max-width: 40px;
+    -fx-min-height: 20px;
+    -fx-max-height: 20px;
+    -fx-padding: 0;
+    -fx-content-display: graphic-only;
+    -fx-cursor: hand;
+}
+.modern-toggle:selected {
+    -fx-background-color: #4DA6FF;
+}
+.modern-toggle .thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-min-width: 16px;
+    -fx-max-width: 16px;
+    -fx-min-height: 16px;
+    -fx-max-height: 16px;
+    -fx-translate-x: -9px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0.5, 0, 1);
+}
+.modern-toggle:selected .thumb {
+    -fx-translate-x: 9px;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 6px;
+    -fx-background-color: transparent;
+}
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #1F2329;
+    -fx-background-radius: 3px;
+}
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #4A4A4A;
+    -fx-background-radius: 3px;
+}
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #4DA6FF;
+}
+
+.color-preview {
+    -fx-background-radius: 5px;
+    -fx-pref-height: 28px;
+    -fx-max-height: 28px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #3A3A3A;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.color-text-field {
+    -fx-background-color: #1E2A3A;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-pref-width: 95px;
+    -fx-font-size: 13px;
+    -fx-background-radius: 4px;
+    -fx-border-color: #2A3B4D;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 2px 6px;
+}
+.preset-btn {
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: #3A4550;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+    -fx-min-width: 80px;
+    -fx-min-height: 32px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 32px;
+}
+.preset-btn:hover {
+    -fx-border-color: #4DA6FF;
+    -fx-border-width: 2px;
+}
+.preset-btn:selected {
+    -fx-border-color: #4DA6FF;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(77, 166, 255, 0.4), 8, 0.5, 0, 2);
+}
+#playlistContainer, #colorRowsContainer, #bgColorRowsContainer {
+    -fx-background-color: transparent;
+}
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+#topBar, #mainControlPanel, #sideMenuContainer, #playlistMenuPane, #settingsMenuPane {
+    -fx-background-color: #161A1E;
+}
+#backgroundLayer {
+    -fx-background-color: transparent;
+}

@@ -7,4 +7,5 @@ module com.audiovisualizer {
     opens com.audiovisualizer to javafx.fxml, javafx.graphics;
     opens com.audiovisualizer.model to com.fasterxml.jackson.databind;
     exports com.audiovisualizer;
+    opens com.audiovisualizer.view to javafx.fxml;
 }
